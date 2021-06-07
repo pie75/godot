@@ -166,6 +166,24 @@ enum JoystickList {
 
 	JOY_OPENVR_TOUCHPADX = JOY_AXIS_0,
 	JOY_OPENVR_TOUCHPADY = JOY_AXIS_1,
+
+	JOY_IMU_0 = 0,	//Accelerometer X
+	JOY_IMU_1 = 1,	//Accelerometer Y
+	JOY_IMU_2 = 2,	//Accelerometer Z
+	JOY_IMU_3 = 3,	//Gyroscrope X 
+	JOY_IMU_4 = 4,	//Gyroscope Y
+	JOY_IMU_5 = 5,	//Gyroscope Z
+	JOY_IMU_6 = 6,	//Reserved for Magnetometer X
+	JOY_IMU_7 = 7,	//Reserved for Magnetometer Y
+	JOY_IMU_8 = 8,	//Reserved for Magnetometer Z
+	JOY_IMU_MAX = 9,
+
+	JOY_ACCEL_X = JOY_IMU_0,
+	JOY_ACCEL_Y = JOY_IMU_1,
+	JOY_ACCEL_Z = JOY_IMU_2,
+	JOY_GYRO_X = JOY_IMU_3,
+	JOY_GYRO_Y = JOY_IMU_4,
+	JOY_GYRO_Z = JOY_IMU_5,
 };
 
 enum MidiMessageList {
