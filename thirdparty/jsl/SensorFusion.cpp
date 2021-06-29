@@ -1,4 +1,5 @@
-
+#ifndef SENSFUSE
+#define SENSFUSE
 #include "JoyShockLibrary.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -409,3 +410,4 @@ struct Motion
 		Quaternion.Normalize();
 	}
 };
+#endif //SENSFUSE

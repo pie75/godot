@@ -35,6 +35,7 @@
 #include "core/resource.h"
 #include "core/typedefs.h"
 #include "core/ustring.h"
+#include "modules/jsl/jsl.h"
 
 /**
  * Input Event classes. These are used in the main loop.
@@ -413,6 +414,47 @@ public:
 	virtual bool accumulate(const Ref<InputEvent> &p_event);
 
 	InputEventMouseMotion();
+};
+
+class InputEventJoypadIMU : public InputEvent {
+	GDCLASS(InputEventJoypadIMU, InputEvent);
+	int JSLdevice;
+	JSL JSL;
+//	MOTION_STATE joy_state;
+//	IMU_STATE imu_state;
+
+	Quat joy_rotation;
+	Vector3 joy_gravity;
+	Vector3 joy_accel;
+	Vector3 imu_accel;
+	Vector3 imu_gyro;
+
+protected:
+	static void _bind_methods();
+
+public:
+//	void set_joy_state();
+//	MOTION_STATE get_joy_state() const;
+	void set_joy_rotation();
+	Quat get_joy_rotation() const;
+	void set_joy_gravity();
+	Vector3 get_joy_gravity() const;
+	void set_joy_acceleration();
+	Vector3 get_joy_acceleration() const;
+
+//	void set_imu_state();
+//	IMU_STATE get_imu_state() const;
+	void set_joy_accelerometer();
+	Vector3 get_joy_accelerometer() const;
+	void set_joy_gyroscope();
+	Vector3 get_joy_gyroscope() const;
+
+	void set_joy_sensor_value(int p_imu);
+	float get_joy_sensor_value(int p_imu) const;
+
+//	virtual String as_text() const;
+
+	InputEventJoypadIMU();
 };
 
 class InputEventJoypadMotion : public InputEvent {

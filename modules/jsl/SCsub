@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+
+Import("env")
+Import("env_modules")
+
+env_jsl = env_modules.Clone()
+
+env_jsl.add_source_files(env.modules_sources, "*.cpp")
+
+if env.msvc:
+    env.Append(LIBS=[File('#thirdparty/jsl/x64/JoyShockLibrary.lib')])
+else:
+    env.Append(LIBS=['JoyShockLibrary'])
+
+
+# Thirdparty source files
+
+thirdparty_obj = []
+
+thirdparty_dir = "#thirdparty/jsl/"
+
+#jsl_src = [
+#    "tools.cpp",
+#    "stdafx.cpp",
+#    "SensorFusion.cpp",
+#    "InputHelpers.cpp",
+#    "JoyShock.cpp",
+#    "JoyShockLibrary.cpp",
+#]
+
+#thirdparty_sources = [thirdparty_dir + file for file in jsl_src]
+
+if not env.msvc:
+    env_jsl.Append(CPPFLAGS=["-isystem", Dir(thirdparty_dir).path])
+else:
+    env_jsl.Prepend(CPPPATH=[thirdparty_dir])
+
+#env_jsl.Append(CPPDEFINES=["BT_USE_OLD_DAMPING_METHOD"])
+
+env_thirdparty = env_jsl.Clone()
+env_thirdparty.disable_warnings()
+#env_thirdparty.add_source_files(thirdparty_obj, thirdparty_sources)
+env.modules_sources += thirdparty_obj
+
+
+# Godot source files
+
+#module_obj = []
+
+#env_jsl.add_source_files(module_obj, "*.cpp")
+#env.modules_sources += module_obj
+
+# Needed to force rebuilding the module files when the thirdparty library is updated.
+#env.Depends(module_obj, thirdparty_obj)

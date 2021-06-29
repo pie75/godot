@@ -41,6 +41,10 @@ class InputDefault : public Input {
 
 	Set<int> keys_pressed;
 	Set<int> joy_buttons_pressed;
+	Map<int, Quat> _joy_rotation;
+	Map<int, Vector3> _joy_gravity;
+	Map<int, Vector3> _joy_acceleration;
+	Map<int, float> _joy_imu;
 	Map<int, float> _joy_axis;
 	//Map<StringName,int> custom_action_press;
 	Vector3 gravity;
@@ -83,11 +87,15 @@ class InputDefault : public Input {
 		bool connected;
 		bool last_buttons[JOY_BUTTON_MAX + 12]; //apparently SDL specifies 35 possible buttons on android
 		float last_axis[JOY_AXIS_MAX];
+		float last_imu[JOY_IMU_MAX];
 		int last_hat;
 		int mapping;
 		int hat_current;
 
 		Joypad() {
+			for (int i = 0; i < JOY_IMU_MAX; i++) {
+				last_imu[i] = 0.0f;
+			}
 			for (int i = 0; i < JOY_AXIS_MAX; i++) {
 				last_axis[i] = 0.0f;
 			}
@@ -134,6 +142,11 @@ public:
 		float value;
 	};
 
+	struct JoyIMU {
+		int min;
+		float value;
+	}
+
 private:
 	enum JoyType {
 		TYPE_BUTTON,
@@ -170,6 +183,11 @@ private:
 				HatMask hat_mask;
 			} hat;
 
+			struct {
+				int imu;
+				JoyAxisRange range;
+				bool invert;
+			} imu;
 		} input;
 
 		JoyType outputType;
@@ -194,11 +212,14 @@ private:
 
 	JoyEvent _get_mapped_button_event(const JoyDeviceMapping &mapping, int p_button);
 	JoyEvent _get_mapped_axis_event(const JoyDeviceMapping &mapping, int p_axis, float p_value);
+	JoyEvent _get_mapped_sensor_event(const JoyDeviceMapping &mapping, int p_imu, float p_value);
 	void _get_mapped_hat_events(const JoyDeviceMapping &mapping, int p_hat, JoyEvent r_events[HAT_MAX]);
 	JoystickList _get_output_button(String output);
 	JoystickList _get_output_axis(String output);
+	JoystickList _get_output_sensor(String output);
 	void _button_event(int p_device, int p_index, bool p_pressed);
 	void _axis_event(int p_device, int p_axis, float p_value);
+	void _sensor_event(int p_device, int p_imu, float p_value);
 	float _handle_deadzone(int p_device, int p_axis, float p_value);
 
 	void _parse_input_event_impl(const Ref<InputEvent> &p_event, bool p_is_emulated);
@@ -224,6 +245,14 @@ public:
 	virtual bool is_action_just_pressed(const StringName &p_action) const;
 	virtual bool is_action_just_released(const StringName &p_action) const;
 	virtual float get_action_strength(const StringName &p_action) const;
+
+	virtual Quat get_joy_rotation(int p_device) const;
+	virtual Vector3 get_joy_gravity(int p_device) const;
+	virtual Vector3 get_joy_acceleration(int p_device) const;
+//	virtual Vector3 get_joy_accelerometer(int p_device) const;
+//	virtual Vector3 get_joy_magnetometer(int p_device) const;
+//	virtual Vector3 get_joy_gyroscope(int p_device) const;
+	virtual float get_joy_sensor(int p_device, int p_imu) const;
 
 	virtual float get_joy_axis(int p_device, int p_axis) const;
 	String get_joy_name(int p_idx);
@@ -254,6 +283,14 @@ public:
 	void set_gyroscope(const Vector3 &p_gyroscope);
 	void set_joy_axis(int p_device, int p_axis, float p_value);
 
+	void set_joy_rotation(int p_device, const Quat &p_rotation);
+	void set_joy_gravity(int p_device, const Vector3 &p_rotation);
+	void set_joy_acceleration(int p_device, const Vector3 &p_rotation);
+//	void set_joy_accelerometer(int p_device);
+//	void set_joy_magnetometer(int p_device);
+//	void set_joy_gyroscope(int p_device);
+	void set_joy_sensor(int p_device, int p_imu, float p_value);
+
 	virtual void start_joy_vibration(int p_device, float p_weak_magnitude, float p_strong_magnitude, float p_duration = 0);
 	virtual void stop_joy_vibration(int p_device);
 	virtual void vibrate_handheld(int p_duration_ms = 500);
@@ -282,6 +319,7 @@ public:
 	void joy_button(int p_device, int p_button, bool p_pressed);
 	void joy_axis(int p_device, int p_axis, const JoyAxis &p_value);
 	void joy_hat(int p_device, int p_val);
+	void joy_sensor(int p_device, int p_imu, const JoyIMU &p_value);
 
 	virtual void add_joy_mapping(String p_mapping, bool p_update_existing = false);
 	virtual void remove_joy_mapping(String p_guid);
@@ -290,6 +328,8 @@ public:
 
 	virtual String get_joy_button_string(int p_button);
 	virtual String get_joy_axis_string(int p_axis);
+	virtual String get_joy_sensor_string(int p_imu);
+	virtual int get_joy_imu_index_from_string(String p_imu);
 	virtual int get_joy_axis_index_from_string(String p_axis);
 	virtual int get_joy_button_index_from_string(String p_button);
 

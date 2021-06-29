@@ -688,6 +688,180 @@ InputEventMouseMotion::InputEventMouseMotion() {
 }
 
 ////////////////////////////////////////
+/*
+void InputEventJoypadIMU::set_joy_state() {
+	int p_device = get_device();
+	joy_state = jsl_get_joy_state(p_device);
+}
+
+MOTION_STATE InputEventJoypadIMU::get_joy_state() const {
+	return joy_state;
+}*/
+
+void InputEventJoypadIMU::set_joy_rotation() {
+	int p_device = get_device();
+	joy_rotation = JSL.jsl_get_joy_rotation(p_device);
+}
+
+Quat InputEventJoypadIMU::get_joy_rotation() const {
+	return joy_rotation;
+}
+
+void InputEventJoypadIMU::set_joy_gravity() {
+	int p_device = get_device();
+	joy_gravity = JSL.jsl_get_joy_gravity(p_device);
+}
+
+Vector3 InputEventJoypadIMU::get_joy_gravity() const {
+	return joy_gravity;
+}
+
+void InputEventJoypadIMU::set_joy_acceleration() {
+	int p_device = get_device();
+	joy_accel = JSL.jsl_get_joy_accel(p_device);
+}
+
+Vector3 InputEventJoypadIMU::get_joy_acceleration() const {
+	return joy_accel;
+}
+/*
+void InputEventJoypadIMU::set_imu_state() {
+	int p_device = get_device();
+	imu_state = jsl_get_imu_state(p_device);
+}
+
+IMU_STATE InputEventJoypadIMU::get_imu_state() const{
+	return imu_state;
+}*/
+
+void InputEventJoypadIMU::set_joy_accelerometer() {
+	int p_device = get_device();
+	imu_accel = JSL.jsl_get_imu_accel(p_device);
+}
+
+Vector3 InputEventJoypadIMU::get_joy_accelerometer() const {
+	return imu_accel;
+}
+
+void InputEventJoypadIMU::set_joy_gyroscope() {
+	int p_device = get_device();
+	imu_gyro = JSL.jsl_get_imu_gyro(p_device);
+}
+
+Vector3 InputEventJoypadIMU::get_joy_gyroscope() const {
+	return imu_gyro;
+}
+
+void InputEventJoypadIMU::set_joy_sensor_value(int p_imu) {
+	int p_device = get_device();
+	switch (p_imu) {
+		case 0:
+			imu_accel.x = JSL.jsl_get_imu_value(p_device, p_imu);
+			break;
+		case 1:
+			imu_accel.y = JSL.jsl_get_imu_value(p_device, p_imu);
+			break;
+		case 2:
+			imu_accel.z = JSL.jsl_get_imu_value(p_device, p_imu);
+			break;
+		case 3:
+			imu_gyro.x = JSL.jsl_get_imu_value(p_device, p_imu);
+			break;
+		case 4:
+			imu_gyro.y = JSL.jsl_get_imu_value(p_device, p_imu);
+			break;
+		case 5:
+			imu_gyro.z = JSL.jsl_get_imu_value(p_device, p_imu);
+			break;
+	}
+}
+
+float InputEventJoypadIMU::get_joy_sensor_value(int p_imu) const {
+//	return jsl_get_imu_value(get_device(), p_imu);
+	switch (p_imu) {
+		case 0:
+			return imu_accel.x;
+			break;
+		case 1:
+			return imu_accel.y;
+			break;
+		case 2:
+			return imu_accel.z;
+			break;
+		case 3:
+			return imu_gyro.x;
+			break;
+		case 4:
+			return imu_gyro.y;
+			break;
+		case 5:
+			return imu_gyro.z;
+			break;
+		default:
+			return 0;
+	}
+}
+
+//String InputEventJoypadIMU::as_text() const {};
+
+void InputEventJoypadIMU::_bind_methods() {
+//	ClassDB::bind_method(D_METHOD("set_joy_fusion_state"), &InputEventJoypadIMU::set_joy_state);
+//	ClassDB::bind_method(D_METHOD("get_joy_fusion_state"), &InputEventJoypadIMU::get_joy_state);
+	ClassDB::bind_method(D_METHOD("set_joy_rotation"), &InputEventJoypadIMU::set_joy_rotation);
+	ClassDB::bind_method(D_METHOD("get_joy_rotation"), &InputEventJoypadIMU::get_joy_rotation);
+	ClassDB::bind_method(D_METHOD("set_joy_gravity"), &InputEventJoypadIMU::set_joy_gravity);
+	ClassDB::bind_method(D_METHOD("get_joy_gravity"), &InputEventJoypadIMU::get_joy_gravity);
+	ClassDB::bind_method(D_METHOD("set_joy_acceleration"), &InputEventJoypadIMU::set_joy_acceleration);
+	ClassDB::bind_method(D_METHOD("get_joy_acceleration"), &InputEventJoypadIMU::get_joy_acceleration);
+
+//	ClassDB::bind_method(D_METHOD("set_joy_sensor_state"), &InputEventJoypadIMU::set_imu_state);
+//	ClassDB::bind_method(D_METHOD("get_joy_sensor_state"), &InputEventJoypadIMU::get_imu_state);
+	ClassDB::bind_method(D_METHOD("set_joy_accelerometer"), &InputEventJoypadIMU::set_joy_accelerometer);
+	ClassDB::bind_method(D_METHOD("get_joy_accelerometer"), &InputEventJoypadIMU::get_joy_accelerometer);
+	ClassDB::bind_method(D_METHOD("set_joy_gyroscope"), &InputEventJoypadIMU::set_joy_gyroscope);
+	ClassDB::bind_method(D_METHOD("get_joy_gyroscope"), &InputEventJoypadIMU::get_joy_gyroscope);
+
+	ClassDB::bind_method(D_METHOD("set_joy_sensor_value", "sensor"), &InputEventJoypadIMU::set_joy_sensor_value);
+	ClassDB::bind_method(D_METHOD("get_joy_sensor_value", "sensor"), &InputEventJoypadIMU::get_joy_sensor_value);
+
+	ADD_PROPERTY(PropertyInfo(Variant::QUAT, "rotation"), "set_joy_rotation", "get_joy_rotation");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gravity"), "set_joy_gravity", "get_joy_gravity");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "acceleration"), "set_joy_acceleration", "get_joy_acceleration");
+	ADD_PROPERTY(PropertyInfo(Variant::REAL, "sensor_value"), "set_joy_sensor_value", "get_joy_sensor_value");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "accelerometer"), "set_joy_accelerometer", "get_joy_accelerometer");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "gyroscope"), "set_joy_gyroscope", "get_joy_gyroscope");
+}
+
+InputEventJoypadIMU::InputEventJoypadIMU() {
+	JSLdevice = 0;
+
+/*	joy_state.quatW = 0;
+	joy_state.quatX = 0;
+	joy_state.quatY = 0;
+	joy_state.quatZ = 0;
+	joy_state.accelX = 0;
+	joy_state.accelY = 0;
+	joy_state.accelZ = 0;
+	joy_state.gravX = 0;
+	joy_state.gravY = 0;
+	joy_state.gravZ = 0;
+
+	imu_state.accelX = 0;
+	imu_state.accelY = 0;
+	imu_state.accelZ = 0;
+	imu_state.gyroX = 0;
+	imu_state.gyroY = 0;
+	imu_state.gyroZ = 0;*/
+
+	joy_rotation.set(0, 0, 0, 1);
+	joy_gravity.set_all(0);
+	joy_accel.set_all(0);
+
+	imu_accel.set_all(0);
+	imu_gyro.set_all(0);
+}
+
+////////////////////////////////////////
 
 void InputEventJoypadMotion::set_axis(int p_axis) {
 	axis = p_axis;

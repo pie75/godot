@@ -145,6 +145,43 @@ float InputDefault::get_action_strength(const StringName &p_action) const {
 	return E->get().strength;
 }
 
+Quat InputDefault::get_joy_rotation(int p_device) const {
+	_THREAD_SAFE_METHOD_
+	if (_joy_rotation.has(p_device)) {
+		return _joy_rotation[p_device]
+	} else {
+		return 0;
+	}
+}
+
+Vector3 InputDefault::get_joy_gravity(int p_device) const {
+	_THREAD_SAFE_METHOD_
+	if (_joy_gravity.has(p_device)) {
+		return _joy_gravity[p_device]
+	} else {
+		return 0;
+	}
+}
+
+Vector3 InputDefault::get_joy_acceleration(int p_device) const {
+	_THREAD_SAFE_METHOD_
+	if (_joy_acceleration.has(p_device)) {
+		return _joy_acceleration[p_device]
+	} else {
+		return 0;
+	}
+}
+
+float InputDefault::get_joy_sensor(int p_device, int p_imu) const {
+	_THREAD_SAFE_METHOD_
+	int c = _combine_device(p_imu, p_device);
+	if (_joy_imu.has(c)) {
+		return _joy_imu[c];
+	} else {
+		return 0;
+	}
+}
+
 float InputDefault::get_joy_axis(int p_device, int p_axis) const {
 	_THREAD_SAFE_METHOD_
 	int c = _combine_device(p_axis, p_device);
@@ -224,6 +261,10 @@ void InputDefault::joy_connection_changed(int p_idx, bool p_connected, String p_
 		for (int i = 0; i < JOY_BUTTON_MAX; i++) {
 			if (i < JOY_AXIS_MAX) {
 				set_joy_axis(p_idx, i, 0.0f);
+			}
+			
+			if (i < JOY_IMU_MAX) {
+				set_joy_imu(p_idx, i, 0.0f);
 			}
 
 			int c = _combine_device(i, p_idx);
@@ -408,6 +449,12 @@ void InputDefault::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool 
 		set_joy_axis(jm->get_device(), jm->get_axis(), jm->get_axis_value());
 	}
 
+	Ref<InputEventJoypadIMU> ju = p_event;
+
+	if (ju.is_valid()) {
+		set_joy_imu(ju->get_device(), ju->get_joy_sensor(), ju->get_joy_sensor_value())
+	}
+
 	Ref<InputEventGesture> ge = p_event;
 
 	if (ge.is_valid()) {
@@ -434,6 +481,27 @@ void InputDefault::_parse_input_event_impl(const Ref<InputEvent> &p_event, bool 
 	if (main_loop) {
 		main_loop->input_event(p_event);
 	}
+}
+
+void InputDefault::set_joy_rotation(int p_device, Quat p_value) {
+	_THREAD_SAFE_METHOD_
+	_joy_rotation[p_device] = p_value;
+}
+
+void InputDefault::set_joy_gravity(int p_device, Vector3 p_value) {
+	_THREAD_SAFE_METHOD_
+	_joy_gravity[p_device] = p_value;
+}
+
+void InputDefault::set_joy_acceleration(int p_device, Vector3 p_value) {
+	_THREAD_SAFE_METHOD_
+	_joy_acceleration[p_device] = p_value;
+}
+
+void InputDefault::set_joy_sensor(int p_device, int p_imu, float p_value) {
+	_THREAD_SAFE_METHOD_
+	int c = _combine_device(p_imu, p_device);
+	_joy_imu[c] = p_value;
 }
 
 void InputDefault::set_joy_axis(int p_device, int p_axis, float p_value) {
@@ -1272,6 +1340,18 @@ static const char *_axes[JOY_AXIS_MAX] = {
 	"",
 	"L2",
 	"R2",
+	"",
+	""
+};
+
+static const char *_imus[JOY_IMU_MAX] = {
+	"Accelerometer X",
+	"Accelerometer Y",
+	"Accelerometer Z",
+	"Gyroscope X",
+	"Gyroscope Y",
+	"Gyroscope Z",
+	"",
 	"",
 	""
 };

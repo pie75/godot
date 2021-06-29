@@ -86,6 +86,14 @@ public:
 	virtual bool is_action_just_released(const StringName &p_action) const = 0;
 	virtual float get_action_strength(const StringName &p_action) const = 0;
 
+	virtual Quat get_joy_rotation(int p_device) const = 0;
+	virtual Vector3 get_joy_gravity(int p_device) const = 0;
+	virtual Vector3 get_joy_acceleration(int p_device) const = 0;
+	virtual Vector3 get_joy_accelerometer(int p_device) const = 0;
+	virtual Vector3 get_joy_magnetometer(int p_device) const = 0;
+	virtual Vector3 get_joy_gyroscope(int p_device) const = 0;
+	virtual float get_joy_sensor(int p_device, int p_imu) const = 0;
+
 	virtual float get_joy_axis(int p_device, int p_axis) const = 0;
 	virtual String get_joy_name(int p_idx) = 0;
 	virtual Array get_connected_joypads() = 0;

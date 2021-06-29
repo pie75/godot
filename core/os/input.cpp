@@ -65,6 +65,12 @@ void Input::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("remove_joy_mapping", "guid"), &Input::remove_joy_mapping);
 	ClassDB::bind_method(D_METHOD("joy_connection_changed", "device", "connected", "name", "guid"), &Input::joy_connection_changed);
 	ClassDB::bind_method(D_METHOD("is_joy_known", "device"), &Input::is_joy_known);
+	ClassDB::bind_method(D_METHOD("get_joy_rotation", "device"), &Input::get_joy_rotation);
+	ClassDB::bind_method(D_METHOD("get_joy_gravity", "device"), &Input::get_joy_gravity);
+	ClassDB::bind_method(D_METHOD("get_joy_acceleration", "device"), &Input::get_joy_acceleration);
+	ClassDB::bind_method(D_METHOD("get_joy_accelerometer", "device"), &Input::get_joy_accelerometer);
+	ClassDB::bind_method(D_METHOD("get_joy_gyroscope", "device"), &Input::get_joy_gyroscope);
+	ClassDB::bind_method(D_METHOD("get_joy_sensor", "device", "sensor"), &Input::get_joy_sensor);
 	ClassDB::bind_method(D_METHOD("get_joy_axis", "device", "axis"), &Input::get_joy_axis);
 	ClassDB::bind_method(D_METHOD("get_joy_name", "device"), &Input::get_joy_name);
 	ClassDB::bind_method(D_METHOD("get_joy_guid", "device"), &Input::get_joy_guid);

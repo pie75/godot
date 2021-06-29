@@ -1,8 +1,9 @@
 #pragma once
 
 #include "JoyShockLibrary.h"
+#include "SensorFusion.cpp"
 #include <bitset>
-#include "hidapi.h"
+#include "hidapi/hidapi.h"
 #include <chrono>
 #include <thread>
 #include <unordered_map>
@@ -79,7 +80,7 @@ public:
 	TOUCH_STATE touch_state = {};
 	TOUCH_STATE last_touch_state = {};
 
-	Motion motion;
+	struct Motion motion;
 
 	int8_t dstick;
 	uint8_t battery;
@@ -440,7 +441,7 @@ public:
 	}
 
 	MOTION_STATE get_motion_state()
-	{
+	{	
 		return motion.GetMotionState();
 	}
 

@@ -139,6 +139,7 @@ void register_core_types() {
 	ClassDB::register_class<InputEventMouseMotion>();
 	ClassDB::register_class<InputEventJoypadButton>();
 	ClassDB::register_class<InputEventJoypadMotion>();
+	ClassDB::register_class<InputEventJoypadIMU>();
 	ClassDB::register_class<InputEventScreenDrag>();
 	ClassDB::register_class<InputEventScreenTouch>();
 	ClassDB::register_class<InputEventAction>();
